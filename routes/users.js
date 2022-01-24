@@ -18,4 +18,8 @@ module.exports = app => {
             users: []
         })
     })
+
+    app.post('/users', (req, res)=>{
+        res.json(req.body) //campos enviados via post
+    })
 }
