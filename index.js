@@ -1,12 +1,10 @@
 const express = require('express')
-let routesIndex = require('./routes/index')
-let routesUsers = require('./routes/users')
+const consign = require('consign')
 
 let app = express()
 
-//usa mais um recurso do express
-app.use(routesIndex)
-app.use(routesUsers)
+consign().include('routes').into(app);
+//Invoca o consign e inclui a pasta routes dentro de app e passa app para os arquivos
 
 app.listen(3000, '127.0.0.1', ()=>{ //porta 3000, IP local
     console.log("Servidor rodando")
