@@ -1,3 +1,9 @@
+let NeDB = require('nedb')
+let db = new NeDB({ //criar o banco
+    filename: 'users.db', //nome do arquivo
+    autoload: true //assim que rodar o código, guarda
+}) 
+
 module.exports = app => {
     app.get('/users', (req, res)=>{
         res.statusCode = 200 //código OK
@@ -20,6 +26,16 @@ module.exports = app => {
     })
 
     app.post('/users', (req, res)=>{
-        res.json(req.body) //campos enviados via post
+
+        db.insert(req.body, (err, user)=>{
+            if(err){
+                console.log(`erro: ${err}`)
+                res.status(400).json({
+                    error: err
+                })
+            } else{
+                res.status(200).json(user)
+            }
+        })
     })
 }
