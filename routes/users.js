@@ -6,14 +6,23 @@ let db = new NeDB({ //criar o banco
 
 module.exports = app => {
     app.get('/users', (req, res)=>{
-        res.statusCode = 200 //código OK
-        res.setHeader('Content-Type', 'application/json') //cabeçalho
-        res.json({
-            users: [{
-                name: 'Ana',
-                email: 'aaaa@gmail.com',
-                id: 1
-            }]
+
+        //Lista usuários do banco
+        db.find({}).sort({name:1}).exec((err, users)=>{
+        //Objeto vazio para pegar todos os dados; ordena o resultado por nome na ordem crescente (1)
+
+            if(err){
+                console.log(`error: ${err}`)
+                res.status(400).json({
+                    error: err
+                })
+            }else{
+                res.statusCode = 200 
+                res.setHeader('Content-Type', 'application/json')
+                res.json({ //Responde como Json
+                    users:users //quando se tem uma chave do mesmo nome da variável, pode-se deixar só users
+                })
+            }
         })
     })
     
