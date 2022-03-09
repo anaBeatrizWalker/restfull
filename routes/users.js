@@ -62,4 +62,15 @@ module.exports = app => {
             }
         })
     })
+
+    routeId.delete((req, res) => {
+
+        db.remove({_id:req.params.id}, {/*opções*/}, err => {
+            if(err){
+                app.utils.erro.send(err, req, res)
+            } else{
+                res.status(200).json(req.params) //só retorna o id do usuário excluido
+            }
+        })
+    })
 }
