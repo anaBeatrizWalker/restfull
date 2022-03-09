@@ -28,17 +28,7 @@ module.exports = app => {
 
     route.post((req, res)=>{
 
-        //Verifica os campos do body (nome do campo, mensagem de erro)
-        req.assert('name', 'O nome é obrigatório.').notEmpty();
-        req.assert('email', 'O e-mail está inválido.').notEmpty().isEmail();
-
-        let errors = req.validationErrors();
-        if(errors){
-            //Mostra os erros na tela
-            app.utils.erro.send(errors, req, res)
-            //Para a execução da página
-            return false
-        }
+        if(!app.utils.validator.user(app, req, res)) return false
 
         db.insert(req.body, (err, user)=>{
             if(err){
@@ -64,6 +54,8 @@ module.exports = app => {
     })
 
     routeId.put((req, res) => {
+
+        if(!app.utils.validator.user(app, req, res)) return false
         
         db.update({_id:req.params.id}, req.body, err => {
             if(err){
