@@ -2,7 +2,7 @@ let NeDB = require('nedb')
 let db = new NeDB({ //criar o banco
     filename: 'users.db', //nome do arquivo
     autoload: true //assim que rodar o código, guarda
-}) 
+})
 
 module.exports = app => {
 
@@ -27,6 +27,18 @@ module.exports = app => {
     })
 
     route.post((req, res)=>{
+
+        //Verifica os campos do body (nome do campo, mensagem de erro)
+        req.assert('name', 'O nome é obrigatório.').notEmpty();
+        req.assert('email', 'O e-mail está inválido.').notEmpty().isEmail();
+
+        let errors = req.validationErrors();
+        if(errors){
+            //Mostra os erros na tela
+            app.utils.erro.send(errors, req, res)
+            //Para a execução da página
+            return false
+        }
 
         db.insert(req.body, (err, user)=>{
             if(err){
